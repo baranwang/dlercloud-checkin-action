@@ -1,10 +1,13 @@
 import fetch from 'node-fetch';
+import { info } from '@actions/core';
 
-async function http<T = any>(url: string, body?: any) {
+async function request<T = any>(url: string, params?: any) {
+  const body = JSON.stringify(params);
+  info(`[request] ${url} ${body}`);
   const { ret, msg, data } = await fetch(
     new URL(url, 'https://dler.cloud/').toString(),
     {
-      body: JSON.stringify(body),
+      body,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -19,16 +22,16 @@ async function http<T = any>(url: string, body?: any) {
 
 export const API = {
   Login: async function (email: string, passwd: string) {
-    return await http<DlerCloud.LoginResponse>('/api/v1/login', {
+    return await request<DlerCloud.LoginResponse>('/api/v1/login', {
       email,
       passwd,
     });
   },
   Logout: async function (access_token: string) {
-    return await http<void>('/api/v1/logout', { access_token });
+    return await request<void>('/api/v1/logout', { access_token });
   },
   Checkin: async function (access_token: string, multiple?: number) {
-    return await http<DlerCloud.CheckinResponse>('/api/v1/checkin', {
+    return await request<DlerCloud.CheckinResponse>('/api/v1/checkin', {
       access_token,
       multiple,
     });

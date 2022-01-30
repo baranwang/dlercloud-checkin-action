@@ -21,10 +21,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.API = void 0;
 const node_fetch_1 = __importDefault(__nccwpck_require__(163));
-function http(url, body) {
+const core_1 = __nccwpck_require__(737);
+function request(url, params) {
     return __awaiter(this, void 0, void 0, function* () {
+        const body = JSON.stringify(params);
+        (0, core_1.info)(`[request] ${url} ${body}`);
         const { ret, msg, data } = yield (0, node_fetch_1.default)(new URL(url, 'https://dler.cloud/').toString(), {
-            body: JSON.stringify(body),
+            body,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -39,7 +42,7 @@ function http(url, body) {
 exports.API = {
     Login: function (email, passwd) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield http('/api/v1/login', {
+            return yield request('/api/v1/login', {
                 email,
                 passwd,
             });
@@ -47,12 +50,12 @@ exports.API = {
     },
     Logout: function (access_token) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield http('/api/v1/logout', { access_token });
+            return yield request('/api/v1/logout', { access_token });
         });
     },
     Checkin: function (access_token, multiple) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield http('/api/v1/checkin', {
+            return yield request('/api/v1/checkin', {
                 access_token,
                 multiple,
             });
@@ -83,14 +86,14 @@ const api_1 = __nccwpck_require__(232);
 function run() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        const email = (0, core_1.getInput)('email') || '';
+        const password = (0, core_1.getInput)('password') || '';
+        let token = (0, core_1.getInput)('token') || '';
+        const multiple = Math.max(Math.min((_a = +(0, core_1.getInput)('multiple')) !== null && _a !== void 0 ? _a : 50, 50), 1);
         try {
-            const email = (0, core_1.getInput)('email') || '';
-            const password = (0, core_1.getInput)('password') || '';
-            let token = (0, core_1.getInput)('token') || '';
             if (!token && !email && !password) {
                 throw Error('必须提供 DlerCloud 的 Token 或登录 DlerCloud 的电子邮件和密码');
             }
-            const multiple = Math.max(Math.min((_a = +(0, core_1.getInput)('multiple')) !== null && _a !== void 0 ? _a : 50, 50), 1);
             if (!token) {
                 (0, core_1.startGroup)('登录');
                 const user = yield api_1.API.Login(email, password);
@@ -103,11 +106,20 @@ function run() {
                 (0, core_1.info)(`剩余流量: ${user.unused}`);
                 (0, core_1.endGroup)();
             }
+            else {
+                (0, core_1.setSecret)(token);
+            }
             (0, core_1.startGroup)('签到');
             const log = yield api_1.API.Checkin(token, multiple);
             (0, core_1.info)(log.checkin);
             (0, core_1.info)(`剩余流量: ${log.unused}`);
             (0, core_1.endGroup)();
+        }
+        catch (e) {
+            const error = e;
+            (0, core_1.setFailed)(error.message);
+        }
+        try {
             if (!(0, core_1.getInput)('token')) {
                 (0, core_1.startGroup)('注销 Token');
                 yield api_1.API.Logout(token);
