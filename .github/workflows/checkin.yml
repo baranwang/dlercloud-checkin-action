@@ -1,0 +1,18 @@
+name: DlerCloud Checkin
+
+on:
+  schedule:
+    - cron:  '0 * * * *'
+  push:
+  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: DlerCloud Checkin Action
+        uses: baranwang/dlercloud-checkin-action@v1.0.0
+        with:
+          email: ${{ secrets.DLERCLOUD_EMAIL }}
+          password: ${{ secrets.DLERCLOUD_PASSWORD }}
