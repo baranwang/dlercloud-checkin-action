@@ -73,23 +73,32 @@ function run() {
             const password = (0, core_1.getInput)('password') || '';
             let token = (0, core_1.getInput)('token') || '';
             if (!token && !email && !password) {
-                (0, core_1.setFailed)('You must provide either a token or email and password');
+                (0, core_1.setFailed)('必须提供 DlerCloud 的 Token 或登录 DlerCloud 的电子邮件和密码');
             }
             const multiple = Math.max(Math.min((_a = +(0, core_1.getInput)('multiple')) !== null && _a !== void 0 ? _a : 50, 50), 1);
             if (!token) {
-                (0, core_1.startGroup)('Login');
+                (0, core_1.startGroup)('登录');
                 const loginData = yield api_1.API.Login(email, password);
                 if (!loginData) {
-                    throw (0, core_1.setFailed)('Login failed');
+                    throw (0, core_1.setFailed)('登录失败');
                 }
                 token = loginData.token;
+                (0, core_1.setSecret)(token);
+                (0, core_1.info)(`登录成功, Token: ${token}`);
+                (0, core_1.info)(`套餐: ${loginData.plan}`);
+                (0, core_1.info)(`到期时间: ${loginData.plan_time}`);
+                (0, core_1.info)(`已用流量: ${loginData.used}`);
+                (0, core_1.info)(`剩余流量: ${loginData.unused}`);
                 (0, core_1.endGroup)();
             }
+            (0, core_1.startGroup)('签到');
             const checkinData = yield api_1.API.Checkin(token, multiple);
             if (!checkinData) {
-                throw (0, core_1.setFailed)('Checkin failed');
+                throw (0, core_1.setFailed)('签到失败');
             }
             (0, core_1.notice)(checkinData.checkin);
+            (0, core_1.info)(`剩余流量: ${checkinData.unused}`);
+            (0, core_1.endGroup)();
         }
         catch (e) {
             const error = e;
