@@ -9,8 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkin
-        id: dlercloud-checkin
+      - uses: actions/checkout@v2
+      
+      - id: dlercloud-checkin
         uses: ./
         with:
           email: ${{ secrets.DLERCLOUD_EMAIL }}
