@@ -6,7 +6,8 @@ async function http<T = any>(url: string, body?: any) {
     body: JSON.stringify(body),
     headers: {
       'Content-Type': 'application/json',
-    }
+    },
+    method: 'POST',
   }).then(res => res.json() as Promise<DlerCloud.Response<T>>);
   if (ret === 200) {
     return data;

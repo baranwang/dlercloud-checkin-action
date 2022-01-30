@@ -28,7 +28,8 @@ function http(url, body) {
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            method: 'POST',
         }).then(res => res.json());
         if (ret === 200) {
             return data;
