@@ -1,0 +1,22 @@
+name: 'DlerCloud Checkin Action'
+description: 'DlerCloud Automatic Checkin'
+author: 'baranwang'
+
+branding:
+  color: 'blue'
+  icon: 'check-circle'
+
+inputs:
+  token:
+    description: 'DlerCloud Token'
+    required: false
+  email:
+    description: 'DlerCloud Email'
+    required: false
+  password:
+    description: 'DlerCloud Password'
+    required: false
+  multiple:
+    description: 'Multiple Checkin'
+    required: false
+    default: 50
