@@ -1,23 +1,27 @@
-import { HttpClient } from '@actions/http-client';
+import fetch from 'node-fetch';
+import { setFailed } from '@actions/core';
 
-const client = new HttpClient('dlercloud-checkin-action')
+async function http<T = any>(url: string, body?: any) {
+  const { ret, msg, data } = await fetch(new URL(url, 'https://dler.cloud/').toString(), {
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }).then(res => res.json() as Promise<DlerCloud.Response<T>>);
+  if (ret === 200) {
+    return data;
+  }
+  throw setFailed(msg);
+}
 
 export const API = {
   Login: async function (email: string, passwd: string) {
-    const { result } = await client.postJson<DlerCloud.Response<DlerCloud.LoginResponse>>('https://dler.cloud/api/v1/login', {
-      email, passwd
-    })
-    return result?.data
+    return await http<DlerCloud.LoginResponse>('/api/login', { email, passwd });
   },
   Logout: async function (access_token: string) {
-    await client.postJson<DlerCloud.Response<any>>('https://dler.cloud/api/v1/logout', {
-      access_token
-    })
+    return await http('/api/logout', { access_token })
   },
   Checkin: async function (access_token: string, multiple?: number) {
-    const { result } = await client.postJson<DlerCloud.Response<DlerCloud.CheckinResponse>>('https://dler.cloud/api/v1/checkin', {
-      access_token, multiple
-    })
-    return result?.data
+    return await http<DlerCloud.CheckinResponse>('/api/checkin', { access_token, multiple });
   }
 }

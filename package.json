@@ -12,11 +12,11 @@
   "devDependencies": {
     "@types/node": "^17.0.13",
     "@vercel/ncc": "^0.33.1",
-    "typescript": "^4.5.5",
-    "husky": "^7.0.0"
+    "husky": "^7.0.0",
+    "typescript": "^4.5.5"
   },
   "dependencies": {
     "@actions/core": "^1.6.0",
-    "@actions/http-client": "^1.0.11"
+    "node-fetch": "^3.2.0"
   }
 }
