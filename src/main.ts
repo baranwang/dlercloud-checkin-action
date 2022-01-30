@@ -5,6 +5,7 @@ import {
   endGroup,
   info,
   setSecret,
+  setOutput,
 } from '@actions/core';
 import { API } from './api';
 
@@ -40,6 +41,9 @@ async function run() {
     const log = await API.Checkin(token, multiple);
     info(log.checkin);
     info(`剩余流量: ${log.unused}`);
+    Object.keys(log).forEach((key) => {
+      setOutput(key, log[key]);
+    })
     endGroup();
   } catch (e) {
     const error = e as Error;

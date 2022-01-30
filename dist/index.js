@@ -113,6 +113,9 @@ function run() {
             const log = yield api_1.API.Checkin(token, multiple);
             (0, core_1.info)(log.checkin);
             (0, core_1.info)(`剩余流量: ${log.unused}`);
+            Object.keys(log).forEach((key) => {
+                (0, core_1.setOutput)(key, log[key]);
+            });
             (0, core_1.endGroup)();
         }
         catch (e) {

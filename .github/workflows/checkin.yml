@@ -2,15 +2,23 @@ name: DlerCloud Checkin
 
 on:
   schedule:
-    - cron:  '0 * * * *'
+    - cron: '0 * * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: DlerCloud Checkin Action
+      - name: Checkin
+        id: dlercloud-checkin
         uses: ./
         with:
           email: ${{ secrets.DLERCLOUD_EMAIL }}
           password: ${{ secrets.DLERCLOUD_PASSWORD }}
+
+      - uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: 1
+          body: |
+            ${{ steps.dlercloud-checkin.outputs.checkin }}
+            剩余流量: ${{ steps.dlercloud-checkin.outputs.unused }}

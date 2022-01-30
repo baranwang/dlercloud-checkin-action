@@ -11,15 +11,27 @@ inputs:
     description: 'DlerCloud Token'
     required: false
   email:
-    description: 'DlerCloud Email'
+    description: 'DlerCloud 登录邮箱'
     required: false
   password:
-    description: 'DlerCloud Password'
+    description: 'DlerCloud 登录密码'
     required: false
   multiple:
-    description: 'Multiple Checkin'
+    description: '签到倍率, 最大 50 倍'
     required: false
     default: 50
+
+outputs:
+  checkin:
+    description: '签到结果'
+  today_used:
+    description: '今日已用流量'
+  used:
+    description: '本月已用流量'
+  unused:
+    description: '本月剩余流量'
+  traffic:
+    description: '本月总流量'
 
 runs:
   using: 'node16'
