@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: DlerCloud Checkin Action
-        uses: baranwang/dlercloud-checkin-action@v1.2.2
+        uses: baranwang/dlercloud-checkin-action@v1.3.0
         with:
           email: ${{ secrets.DLERCLOUD_EMAIL }}
           password: ${{ secrets.DLERCLOUD_PASSWORD }}
