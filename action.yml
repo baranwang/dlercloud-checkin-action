@@ -20,3 +20,7 @@ inputs:
     description: 'Multiple Checkin'
     required: false
     default: 50
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
