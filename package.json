@@ -1,6 +1,6 @@
 {
   "name": "dlercloud-checkin-action",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "DlerCloud Automatic Checkin",
   "main": "lib/main.js",
   "scripts": {
